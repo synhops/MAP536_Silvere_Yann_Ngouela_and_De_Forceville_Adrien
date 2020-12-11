@@ -1,0 +1,180 @@
+---
+title: 'MAP531-PC1: Descriptive statistics'
+author: "P. Latouche"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analysis of the swiss data set
+
+In this exercise, we aim at analyzing the swiss data set provided in R. We will rely on descriptive statistics along with graphs to get some (general) insights. 
+
+#### load the swiss data set
+
+```{r}
+
+```
+
+
+#### how is the data set stored in R ? 
+```{r}
+
+```
+
+
+
+#### what are the observations ? what are the variables ? 
+
+
+
+#### what are the types of the variables available ? 
+
+
+
+#### do you find missing values, mistakes, outliers ? 
+```{r}
+
+```
+```{r}
+
+```
+
+
+#### compute all necessary numerical summaries for each variable
+```{r}
+
+```
+
+#### study the locations and dispersions of the variables 
+```{r}
+
+
+```
+
+#### study the relationships between the variables with numerical summaries
+```{r}
+
+
+```
+
+#### study the relationships between the variables with scatter plots
+```{r}
+
+```
+
+#### draw some (general) conclusions along the way
+```{r}
+
+```
+
+#### plot graphs to illustrate the empirical laws of the variables
+```{r}
+
+```
+
+#### rely on kernel (non parametric) estimators to estimate the density of the variables
+
+```{r}
+
+```
+
+#### plot the empirical cumulative distribution functions
+```{r}
+
+```
+
+
+# Analysis of the decathlon data set
+
+In this exercise, we aim at analyzing the decathlon data set available on Moodle. We will rely on descriptive statistics along with graphs to get some (general) insights. 
+
+#### load the decathlon data set
+```{r}
+
+```
+
+#### what are the observations ? what are the variables ? 
+```{r}
+
+```
+
+#### what are the types of the variables available ? 
+```{r}
+
+```
+
+#### do you find missing values, mistakes, outliers ? 
+```{r}
+
+```
+
+#### compute all necessary numerical summaries for each variable
+```{r}
+
+```
+
+#### study the locations and dispersions of the variables 
+```{r}
+
+```
+
+#### study the relationships between the variables with numerical summaries
+```{r}
+
+```
+
+#### study the relationships between the variables with scatter plots
+```{r}
+
+```
+
+#### draw some (general) conclusions along the way
+```{r}
+
+```
+
+#### plot graphs to illustrate the empirical laws of the variables
+```{r}
+
+```
+#### rely on kernel (non parametric) estimators to estimate the density of the variables
+```{r}
+
+```
+#### plot the empirical cumulative distribution functions
+```{r}
+
+```
+
+
+# Analysis of the abalone data set
+
+In this exercise, we aim at analyzing the abalone data set available on Moodle. We will rely on descriptive statistics along with graphs to get some (general) insights. Same exercise as before except that one variable is here qualitative. So, study the ablone data sets based on the modalities of the variables. 
+
+
+#### analyze the data sets with the functions introduced in the previous exercises
+```{r}
+
+```
+
+#### compute all QQ plots
+```{r}
+
+```
+As an illustration, use the function qqnorm and qqline to assess whether the quantitative variables in the data set are Gaussian. 
+
+
+#### compute the skewness of all quantitative (continuous) variables in the data set
+```{r}
+
+```
+
+#### compute the kurtosis of all quantitative (continuous) variables in the data set
+```{r}
+
+```

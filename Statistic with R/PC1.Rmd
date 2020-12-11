@@ -1,0 +1,198 @@
+---
+title: "Objects in R"
+output: pdf_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This files contains commands to create and become familiar with some R objects. We will quickly define 4 **objects: vectors, factors, matrices and lists**. You can copy/paste the code and execute it in your R console. 
+
+R uses functions or operators which 
+act on objects. 
+Each object has two intrinsic attributes:  its mode and its
+length. 
+The main modes (types) of objects are numeric (real numbers),  character ("hi"),  logical (boolean TRUE or FALSE), complex. 
+Objects can also have specific attributes. 
+
+For each object, we present how to create it, its attribute and how to select some elements of the object.
+
+###Vectors
+Vectors are _atomic objects_, that is to say they are of a unique type (logical, numeric, etc.), made up of a set of values called components, coordinates or elements. 
+
+```{r results = "hide"}
+# Creation 
+# There are different ways to create an object: 
+# 1) with the c for concatenate and elements are separated with a comma
+x <- c(2,-5,-6, 9) 
+x # to print x (or print(x))
+
+# 2) with sequences 
+y = 1:6 # Rq: you can use = instead of <- (but the latter is my preference)
+y = c(x, y)
+y 
+
+z <- seq(1, 6 , by = 0.5)  
+z
+?seq # help(seq) to better undestand this function
+ 
+# 3) with specific functions
+rep(1, 4)
+rep(c(1, 2), each = 3)
+
+# Attributes
+is.numeric(x); is.vector(x)
+length(x)
+
+# Selection
+# The squared brackets [] is used to select an element of a vector. The position (index) of the element to select is put inside the squared bracket
+y[4] 
+y[c(3,5)]
+y[(y>2)&(y<5)] # and
+## ">", "<", ">=", "<=", "==", "!=" 
+```
+
+It is also possible to create vectors of characters:
+```{r eval = FALSE}
+# Characters are put within " " or ' ' 
+x <- c("green","red","black","yellow")
+x
+X <- rep('A',5)
+
+is.character(x)
+length(x)
+
+x[3]
+```
+
+###Factors
+Factors are vectors which enable the user to manipulate 
+qualitative data. The categories 
+of the factor are defined by levels. 
+
+```{r results = "hide"}
+# Creation
+# Factors can be created with the function factor
+sex <- factor(c("F","M","F","F"))
+summary(sex) # summary is a very useful function as we will see
+
+# Attributes
+is.factor(sex)
+length(sex)
+# Factors are objects with specific attributes:
+nlevels(sex)
+levels(sex)
+```
+
+###Matrices
+Matrices are atomic objects, that is to say, they are of the same mode or
+type for all values. 
+
+```{r results = "hide"}
+# Creation
+mat <- matrix(0, nrow = 2, ncol = 4)
+mat 
+mat <- matrix(1:9, nrow = 3, ncol = 3)
+mat 
+mat <- matrix(1:9, nrow = 3, ncol = 3, byrow = T) # By default, R ranks the values in a matrix by column. To rank the elements by row, use the argument  byrow
+
+# Attributes
+is.matrix(mat)
+length(mat)
+# Matrices have specific attributes:
+dim(mat); ncol(mat); nrow(mat)
+rownames(mat)
+colnames(mat) <- paste('var', 1:3, sep = "_") # This function is very useful!
+mat
+
+# Select elements
+# Since matrices have rows and columns, elements are selected by specifying the index of the row and the index of the column in the brackets [indexrow, indexcolumn]:  
+mat[1, 2]; mat[-2, 1:2]
+
+mat[, mat[1, ]>2] 
+```
+
+###Lists
+A list is a heterogeneous object.  It is a set of
+ranked objects which do not always have the same mode neither length. Lists will be very useful; there are the outputs of many predefined functions.
+
+```{r results = "hide"}
+# Creation 
+# We create a list with the function list of 3 objects a vector, a matrix and a factor
+mylist <- list(myvect = c(1,5,-3), mymat = mat, myfact = c("a","b"))
+
+
+# Attributes
+length(mylist)
+is.list(mylist)
+class(mylist)
+# Specific attributes
+names(mylist)
+
+# Selection
+# To select an element of a list, you can either use $ and the name of the element you want to select or the double brackets [[]] and the index or the name of the element you would like to select
+
+mylist$myvect
+mylist[[2]]
+mylist[["mymat"]]
+
+# an element of a list can be a list
+bb <- list(onelist <- mylist, y <- c(1,2))
+length(bb)
+bb$onelist$myfact
+```
+```{r global_Options, echo=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, include = TRUE, eval = FALSE)
+```
+
+
+# Tests  
+
+## Confidence intervals for a mean
+Let $X = (X_1,\ldots,X_n)'$ be i.i.d. independent Gaussian random variables with mean $\mu$ and variance $\sigma^2$. Assume first that $\sigma^2$ is known and define $\bar{X}_n = n^{-1}\sum_{i=1}^n X_i$. Note that:
+$$
+\frac{\sqrt{n}}{\sigma}\,\left(\bar{X}_n-\mu\right) \sim \mathcal{N}(0,1)\,.
+$$
+
+
+### Ex: average height of adults
+
+We shall examine the average height of adults. This example is inspired by a study made by the French Institute of [Textile and Apparel](http://www.ifth.org/en/). They measured a sample of people to update the reference clothing system. Such studies have a huge economical impact since they impact many sectors: the car industry (to modify the seats of the cars), the hospitals (to modify the stretcher), etc.
+
+We have access to a sample of 119 men. For the overall population, we would like to obtain 
+an estimation of the mean of the height and a confidence interval for this mean at 95\%.
+
+```{r, eval =TRUE, warning = FALSE}
+library(MASS)
+library(ggplot2)
+data(survey)
+HeightM <-survey[survey[, "Sex"]=="Male", "Height", drop = FALSE]
+
+ggplot(HeightM) + aes(x = Height) + geom_histogram(aes( y = ..density..))+  labs(y = "Density", x = "Height") + geom_line(stat="density") + ggtitle("Distribution of the Heights")
+
+#  qqnorm(scale( na.omit(HeightM$Height)))
+# qqline(scale( na.omit(HeightM$Height)))
+```
+
+This distribution is not far from a normal distribution and the sample size is 106 so that we can pursue the analysis. For small samples,  the normality of the sample should be tested, rather than
+  that of the mean. In order to do so, the Shapiro-Wilk test could be used. If normality is refused, we can construct a confidence interval using for example a **bootstrap** (we will study this later)
+  procedure.
+  
+The confidence interval is calculated using the function t.test:
+```{r, eval = TRUE, warning = FALSE}
+res <- t.test(HeightM$Height, conf.level = 0.95)
+res
+res$conf.int
+```
+
+Strictly speaking, the unknown mean $\mu$ of $X$, estimated to be
+$178.8$ cm, either does or does not belong to the interval $[177.21, 180.44]$. It is therefore within the interval with a probability of 0 or 1.
+However, the procedure as a whole guarantees that, if it is
+repeated infinitely with new samples of the same
+size $n=106$, then 95\% of the confidence intervals will contain the
+true unknown value of $\mu$.
+

@@ -1,0 +1,188 @@
+---
+title: 'MAP531-PC2: Estimation'
+author: "A. Dieuleveut"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+In the following, for diffenrent distributions (Gaussian, Cauchy, Uniform), we compute 3 estimators:
+- one based on the mean
+- one based on the median
+- one based on the maximum and/or minimum of the varaible.
+For each distribution, the goal is to identify the maximum likelihood estimator, and a simple estimator using method of moments, and to comment on the dispersion of each estimator.
+
+
+# Analysis of the different methods of estimation Gaussian r.v.
+Choose (randomly) parameters $(\theta, \sigma^2 )$ of a Gaussian distribution $\mathcal N (\theta, \sigma^2 )$.
+
+For Nattempts = 1000 repetitions of the same experiment, compute the 3 estimators described above for a sample of size nsample = 100.
+
+Plot the different values of those estimators. Which one is the MLE? What estimator would you use with method of moments? Which seems to be the best?
+
+
+
+```{r}
+theta = rcauchy(1)
+sigma2 = rexp(1,0.5)
+set.seed(43) 
+
+Nattempts = 1000
+nsample   = 100
+
+est_theta <- list(moy = c(), minmax = c(), median=c() )
+est_var   <- list(moy = c(), minmax = c())
+
+
+
+
+
+# title(c('Boxplot of one sample of size', nsample))
+
+
+# title('Boxplot of 3 different estimators')
+
+```
+
+# Analysis of the different methods of estimation Cauchy r.v.
+Choose (randomly) a parameter $(\theta)$ of a Cauchy distribution $\mathcal C (\theta, 1 )$.
+
+For Nattempts = 1000 repetitions of the same experiment, compute the 3 estimators described above for a sample of size nsample = 100.
+
+Plot a histogram one sample of Cauchy r.v. of size 100. What do you think? How to improve such a histogram?
+
+Plot the different values of those estimators. Which one is the MLE? What estimator would you use with method of moments? Which seems to be the best?
+
+
+```{r}
+theta = rcauchy(1)
+sigma2 = rexp(1,0.5)
+
+Nattempts = 1000
+nsample   = 100
+est_theta <- list(moy = c(), minmax = c(), median=c() )
+est_var   <- list(moy = c(), minmax = c())
+
+
+
+
+
+
+
+
+
+# title(c('Boxplot of one sample of size', nsample))
+
+
+# title('Boxplot of 3 different estimators')
+
+```
+
+# Analysis of the different methods of estimation Uniform (theta)
+Choose (randomly) a parameter $(\theta)$ of a Uniform distribution $\mathcal U [0;\theta]$.
+
+For Nattempts = 1000 repetitions of the same experiment, compute the 3 estimators described above for a sample of size nsample = 100.
+
+Plot the different values of those estimators. Which one is the MLE? What estimator would you use with method of moments? Which seems to be the best?
+
+```{r}
+theta = rexp(1,0.1)
+
+Nattempts = 1000
+nsample   = 100
+est_theta_u <- list(moy = c(), mle = c(), median=c() )
+est_var   <- list(moy = c(), mle = c())
+
+
+
+# title('Boxplot of 3 different estimators')
+
+
+# title('Boxplot of the MLE')
+```
+
+### Compare with a histogram the MLE and MM estimators
+
+Plot the 2 histograms on the same plot. Set options for the histograms to be frequencies (area 1 under the curve).
+Add a vertical line to represent the true $\theta^*$.
+
+```{r}
+
+
+```
+
+
+# Estimating parameters of a Poisson distribution to model the number of goals scored in football 
+
+
+### Load the season-1819_csv file and describe what it contains.
+
+What are the variables FTHG, FTAG, FTR ?
+
+```{r}
+
+```
+
+
+
+
+### Compute the scores over the season of each team (victory = 3points, draw=1), the score in "home" matches, the score in "away" matches.
+Compare the histogram of the total number of points at home and away.
+Fit a density to those histrograms.
+
+```{r}
+
+```
+
+### Compute the MLE estimators (home, away) for the Poisson model described in exercise 7.
+
+```{r}
+
+
+```
+
+
+
+### Plot the observed frequencies for the number of goals and the frequencies of a Poisson law of parameter $\hat \theta$.
+Is there a difference? Is it enough to conclude that the number of goals does not follow a Poisson distribution?
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+
+
+### If we observe a Poisson distribution, what is the distribution of $\hat \sigma^2 - \bar X$ . What do you conclude on the model we have used?
+ 
+ 
+```{r}
+
+```
+
+
+
+
+
+```{r}
+
+```
+
+
+
+### Consider the mixture distribution described in exercise 7. Fit the parameters.
+
+
+```{r}
+
+```
+

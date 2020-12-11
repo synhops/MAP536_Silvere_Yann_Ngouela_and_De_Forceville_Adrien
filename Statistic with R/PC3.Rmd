@@ -1,0 +1,159 @@
+---
+title: "MAP531-PC3: Confidence intervals"
+author: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## To warm up
+
+__Exercise 1:__
+
+Let $X_1$ be distributed from $\mathcal{N}(\mu, 1)$, where $\mu$ is an unknown real number. Denote $z_\alpha$ the $\alpha$-quantile for the standard Normal distribution i.e. the real $z_\alpha$ such that $\mathbb{P}_{X\sim\mathcal{N}(0, 1)}(X\leq z_\alpha)=\alpha$.
+
+1. Compute $z_{0.95}$, $z_{0.975}$, $z_{0.995}$ and $z_{1-0.05/9}$ with R.
+
+Hint: the function qnorm allows you to compute quantiles of a standard normal distribution.
+
+2. Which of the following intervals are $95\%$ confidence intervals for $\mu$
+
+\[ \left(-\infty, X_1 + z_{0.95}\right], \quad \left[1.2-z_{0.975}, 1.2+z_{0.975}\right], \quad \left[X_1+z_{0.025},X_1-z_{0.025}\right], \quad \left[X_1- 2.12,X_1+ 1.73\right],\]
+\[ \left[\mu - z_{0.975},\mu+z_{0.975}\right], \quad \left[X_1-z_{0.995},X_1+z_{1-9*0.005}\right]
+?\]
+
+3. Which of the $95\%$ confidence interval do you prefer why?
+
+## Confidence intervals for the mean in Gaussian models
+
+Let $$X_1,\ldots,X_n\overset{i.i.d.}\sim \mathcal{N}(\mu, \sigma^2)$$
+be Gaussian observations. The corresponding statistical model is $$(\mathbb{R}^n,\mathcal{B}(\mathbb{R}^n),\{\mathcal{N}^{\otimes n}(\mu, \sigma^2); (\mu,\sigma)\in\mathbb{R}\times\mathbb{R}_+\}).$$ 
+Let $\alpha\in(0,1)$,  $CI(\alpha):\mathbb{R}^n\rightarrow \{\text{intervals of }\mathbb{R}\}$ a function of the observations, and $$g:(\mu,\sigma)\in\mathbb{R}\times\mathbb{R}_+\mapsto \mu.$$ $CI(\alpha$ is a confidence interval for $g(\mu,\sigma)$ (i.e. for the mean $\mu$) if for all $(\mu,\sigma)\in\mathbb{R}\times\mathbb{R}_+$
+$$\mathbb{P}_{\mathcal{N}(\mu, \sigma^2)}(\{(x_1,\ldots,x_n)\in\mathbb{R}^n: \mu\in CI(\alpha)(x_1,\ldots,x_n)\})\geq 1-\alpha.$$
+
+In practice this has the following sense. Consider the experiment where we 
+1) sample $(x_1,\ldots,x_n)$ realizations of $(X_1, \dots, X_n)$ i.i.d. from $\mathcal{N}(\mu,\sigma^2)$; 
+2) compute $CI(\alpha)(x_1,\ldots,x_n)$; 
+3) check whether $\mu\in CI(\alpha)(x_1,\ldots,x_n)$. 
+If we repeat the experiment a large number of times, then we will observe that $\mu\in CI(\alpha)(x_1,\ldots,x_n)$ for a proportion around $1-\alpha$ of the trials.
+
+In the next exercises we learn how to compute confidence intervals for the mean of Gaussian variables when the variance of the noise is known (Exercise 2) or unknown (Exercise 3). Then, we will see how this can be used to check whether two populations have the same mean (Exercise 4).
+
+Let  $X_1, X_2, \cdots, X_n$ be $n$  random variables i.i.d. from $\mathcal{N}(\mu,\sigma^2)$, with  parameters  $\mu$, the mean, and  $\sigma^2>0$, the variance. We want to derive the 95% confidence interval for the mean. 
+
+### Known variance
+
+__Exercise 2:__ 
+
+1. Consider $Z\sim\mathcal{N}(0,1)$. For $\alpha\in(0,1)$, compute a value $\delta_{\alpha}$ such that $\mathbb{P}(0\in[Z-\delta_{\alpha}, Z+\delta_{\alpha}])=1-\alpha$.
+
+Hint: remember the definition of the quantiles of a random variable X: $z_{\alpha} = \inf\{t\in\mathbb{R}: \mathbb{P}(X\leq t)\geq \alpha\}$.
+
+2. Consider $X_1,\ldots,X_n\overset{i.i.d.}\sim \mathcal{N}(\mu, \sigma^2)$. For $\alpha\in(0,1)$, find a function $f:\mathbb{R}^n\rightarrow \mathbb{R}$ and a value $\delta_{\alpha,n}$ such that \[\mathbb{P}(\mu\in[f(X_{1},\ldots,X_n)-\delta_{\alpha,n}, f(X_{1},\ldots,X_n)+\delta_{\alpha,n}])=1-\alpha.\]
+
+Hint: use the distribution of the empirical mean.
+
+3. Create an R function `conf_int` that takes as input a vector of observations $x=(x_1,\ldots,x_n)$, the variance $\sigma^2$ and a confidence level $\alpha\in(0,1)$, and ouputs a vector of size two containing the lower and upper bound of the confidence interval $(f(X_{1},\ldots,X_n)-\delta_{\alpha,n}, f(X_{1},\ldots,X_n)+\delta_{\alpha,n})$. 
+
+4. Generate a random sample of size $n=100$ drawn from a Gaussian distribution $\mathcal{N}(10,25)$. Derive a 95% confidence interval for the mean $\mu$ with known variance.
+
+5. How can you check that your intervals are valid?
+
+6. Repeat 1000 times the same procedure as in Exercise 2.4. Count the number of times that the true  mean $\mu$ is in the confidence interval. 
+
+
+
+#### Unknown variance
+
+In practice, we rarely know the true variance $\sigma^2$; thus, the procedure of Exercise 1 has to be extended to the case where $\mu$ and $\sigma^2$ are unknown. We will use the following theorem:
+
+__Theorem (Student/Gosset): __ Let $X_1,\ldots,X_n\overset{i.i.d.}\sim \mathcal{N}(\mu, \sigma^2)$.
+
+1) The empirical mean $\bar X_n = \frac{1}{n}\sum_{i=1}^nX_i$ and variance $S_n^2 = \frac{1}{n-1}\sum_{i=1}^n(X_i-\bar X_n)^2$ are independent.
+
+2) The empirical mean $\bar X_n = \frac{1}{n}\sum_{i=1}^nX_i$ follows a Gaussian distribution with mean $\mu$ and variance $\sigma^2/n$.
+
+3) $(n-1)S_n^2$ follows a centered $\chi^2$ distribution with $(n-1)$ degrees of freedom.
+
+4) The variable $T_n$ defined by
+$$T_n=\sqrt{n}\frac{\bar X_n-\mu}{S_n} $$
+follows a Student distribution with $n-1$ degrees of Freedom.
+
+
+__Exercise 3:__ 
+
+1. Using the previous theorem, for $\alpha\in(0,1)$, find a value $\delta_{\alpha,n}(X_1,\ldots,X_n)$ such that for all $(\mu,\sigma)$
+$$\mathbb{P}_{\mathcal{N}(\mu,\sigma^2)}\left(\mu\in[\bar X_n - \delta_{\alpha,n}(X_1,\ldots,X_n), \bar X_n + \delta_{\alpha,n}(X_1,\ldots,X_n)]\right)\geq 1-\alpha.$$
+
+2.  Create an R function `conf_int_student` that takes as input a vector of observations $(x_1,\ldots,x_n)$ and a confidence level $\alpha\in(0,1)$, and ouputs a vector of size two containing the lower and upper bound of the confidence interval $(\bar X_n - \delta_{\alpha,n}(X_1,\ldots,X_n), \bar X_n + \delta_{\alpha,n}(X_1,\ldots,X_n))$.
+
+Hint: the function `qt` allows you to compute quantiles of a student distribution.
+
+3. Generate a random sample of size $n=100$ drawn from a Gaussian distribution $\mathcal{N}(10,25)$. Derive a 95% confidence interval for the mean $\mu$ with unknown variance.
+
+4. How can you check that your confidence intervals are valid?
+
+5. Repeat 1000 times the same procedure as in Exercise 3.3. Count the number of times that the true  mean $\mu$ is in the confidence interval. 
+
+
+
+
+Confidence intervals for the mean variables can be used to compare two distributions. If we have two populations $A$ and $B$ and a trait $x$, we might be interested in comparing the distribution of the trait $x$ among individuals of population $A$ and individuals of population $B$. This has applications in healthcare (compare the mean of some quantitative symptom, e.g. blood pressure, among treated and untreated people) or survey data analysis (e.g., to compare the mean income of individuals from two geographical regions). In the following exercises we apply the results of Exercises 2 and 3 to compare the mean family income of Arkansas and California.
+
+
+__Exercise 4:__ 
+
+The usa_census data set contains two variables measured across 30,373 american households; it is extracted from the public use [US census data base](https://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml? refresh=t). The first variable is qualitative (State) and the second is quantitative (Income, we use the square root of the yearly income in dollars). The goal of this exercise is to compare the distribution of the family income in Arkansas with the distribution of the family income in California. In particular, we will compare their mean values.
+
+
+1. Load the usa_census data.
+
+2. Compare graphically the distribution of the incomes for families in Arkansas and California. What do you observe?
+
+Hint: You can (for example) use the `ggplot2` package and the functions `geom_histogram`, `geom_boxplot`, etc. 
+
+
+3. Estimate the mean and standard deviation of the income for both samples (Arkansas and California) separately.
+
+Hint: use the function `aggregate`
+
+4. Based on the previous questions, do you believe the observed differences are due to noise or to true differences in the distributions ?
+
+5. To use the confidence intervals for the mean of Gaussian variables, we first need to check that the distribution of income is (approximately) Gaussian. Check graphically whether this hypothesis is valid. 
+
+6. Using the function conf_int_student written in Exercise 3, compute 95% intervals for the mean of the income in Arkansas and California. Does this corroborate the graphical analysis ?
+
+7. The equality of the means should be tested properly using a Student test (we'll see in details with PC 7 and 8). Can you design a simulation where two groups have the same mean, but the 95% confidence intervals do not intersect?
+
+
+### Confidence intervals in other models
+
+__Exercise 5 -- Survey models:__
+
+In a study on health at work, $500$ employees of different lines of business and French districts have been surveyed. Among them, $145$ report that they have been subject to psychological harassment at work.
+
+1. Determine the population and the statistical model.
+
+2. Give an estimator of the proportion of employees that have been subject to psychological harassment at work.
+
+3. Give a $90\%$ confidence interval for this proportion.
+
+4. If, with the same data, we compute a $95\%$ confidence interval, would it be smaller or larger than the previous interval? (Justify without computations.)
+
+
+
+__Exercise 6 -- Uniform models:__
+
+Let $X_1, \dots, X_n$ be i.i.d. random variables diistributed from $\mathcal{U}(0, \theta)$, for some unknown $\theta>0$.
+
+1. Give the MLE $\hat{\theta}_{MLE}$.
+
+2. Compute the cdf of $\frac{\hat{\theta}_{MLE}}{\theta}$.
+
+3. Give an $1-\alpha$ confidence interval for $\theta$ for $\alpha \in (0,1)$.
+
+
+
